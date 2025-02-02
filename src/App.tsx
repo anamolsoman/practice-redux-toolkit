@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import "./App.css";
+import { RootState } from "@reduxjs/toolkit/query";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "./interfaces";
+import { addUser, setUsers } from "./features/userSlice";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  const [user, setUser] = useState<User | null>();
+  const users = useSelector((state: RootState) => state.users.users);
+  console.log(users, "users");
+  const setUserData = (e: MouseEvent<HTMLButtonElement>) => {
+    dispatch(addUser());
+  };
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch(setUsers(data));
+      });
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {users &&
+        users.map((user: User) => {
+          return (
+            <>
+              <div>Name : {user?.name}</div>
+              <div>Email : {user?.email}</div>
+              <div>City : {user?.city}</div>
+              <div>Id : {user?.id}</div>
+            </>
+          );
+        })}
+
+      <button onClick={setUserData}>Set User</button>
+      <p>Click on the Vite and React logos to learn more</p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
