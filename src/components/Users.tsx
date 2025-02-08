@@ -3,8 +3,8 @@ import { useEffect } from "react";
 
 import { RootState } from "@reduxjs/toolkit/query";
 import { useDispatch, useSelector } from "react-redux";
-import { User } from "./interfaces";
-import { addUser, setUsers } from "./features/userSlice";
+import { User } from "../interfaces";
+import { addUser, setUsers } from "../features/userSlice";
 function Users() {
   const dispatch = useDispatch();
   // const [user, setUser] = useState<User | null>();
